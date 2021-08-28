@@ -1,0 +1,32 @@
+#!/bin/bash
+# startup script for centos 7 without selinux, to create server without password authentication and set up openvpn server with defualt user1 file in the root directory. 
+
+PATH_KEY="/root/.ssh/authorized_keys"
+PATH_SSHD="/etc/ssh/sshd_config"
+
+# insert public key below
+KEY=""
+
+echo $KEY >> $PATH_KEY
+
+sed -i "65s/.*/PasswordAuthentication no/" $PATH_SSHD
+systemctl restart sshd
+
+yum install vim -y
+
+
+
+curl -o /root/openvpn-install.sh https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+chmod +x openvpn-install.sh
+
+export APPROVE_INSTALL=y
+export APPROVE_IP=y
+export IPV6_SUPPORT=n
+export PORT_CHOICE=1
+export PROTOCOL_CHOICE=1
+export DNS=1
+export COMPRESSION_ENABLED=n
+export CUSTOMIZE_ENC=n
+export CLIENT=open_vpn_user_1
+export PASS=1
+./openvpn-install.sh
